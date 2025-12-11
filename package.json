@@ -6,6 +6,7 @@
     "type": "module",
     "scripts": {
         "lint": "eslint",
+        "lint:staged": "lint-staged",
         "spellcheck": "cspell lint --dot --gitignore --color --cache --show-suggestions \"(packages|apps|demos)/**/*.@(html|js|cjs|mjs|ts|tsx|css|scss|md)\"",
         "commit": "git-cz",
         "prepare": "husky"
@@ -14,6 +15,15 @@
         "commitizen": {
             "path": "cz-git"
         }
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx}": [
+            "eslint --fix",
+            "prettier --write"
+        ],
+        "*.{css,scss,md}": [
+            "prettier --write"
+        ]
     },
     "keywords": [],
     "author": "",
@@ -35,6 +45,7 @@
         "fast-glob": "3.3.3",
         "@commitlint/config-conventional": "20.2.0",
         "@commitlint/cli": "20.2.0",
-        "husky": "9.1.7"
+        "husky": "9.1.7",
+        "lint-staged": "16.2.7"
     }
 }
