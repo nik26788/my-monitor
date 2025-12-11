@@ -1,3 +1,5 @@
+## 本目录配置
+
 ### 初始化项目
 
 pnpm init
@@ -36,3 +38,10 @@ cspell.json
 
 插件：husk, lint-staged
 npx husky init
+
+## packages/core 配置
+
+### tsup
+
+插件： tsup
+配置：tsup.config.ts, tsconfig.json
