@@ -45,3 +45,7 @@ npx husky init
 
 插件： tsup
 配置：tsup.config.ts, tsconfig.json
+
+## demos/vanilla 配置
+
+pnpm create vite vanilla --template vanilla-ts
