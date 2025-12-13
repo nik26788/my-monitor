@@ -1,6 +1,6 @@
 import './style.css'
 
-import { init } from '@my-monitor/browser-utils'
+import { init } from '@my-monitor/browser'
 
 import viteLogo from '/vite.svg'
 
@@ -33,6 +33,7 @@ setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
 new Promise((resolve, reject) => {
     reject('Oops!!!')
-}).catch(error => {
-    console.log(error)
 })
+// .catch(error => {
+//     console.log(error)
+// })

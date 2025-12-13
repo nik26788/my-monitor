@@ -62,15 +62,24 @@ importers:
 
   demos/vanilla:
     devDependencies:
-      '@my-monitor/browser-utils':
+      '@my-monitor/browser':
         specifier: workspace:*
-        version: link:../../packages/browser-utils
+        version: link:../../packages/browser
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
       vite:
         specifier: ^7.2.4
         version: 7.2.7(@types/node@22.5.5)(jiti@2.6.1)(yaml@2.8.2)
+
+  packages/browser:
+    devDependencies:
+      '@my-monitor/browser-utils':
+        specifier: workspace:*
+        version: link:../browser-utils
+      tsup:
+        specifier: 8.5.1
+        version: 8.5.1(jiti@2.6.1)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
 
   packages/browser-utils:
     devDependencies:
