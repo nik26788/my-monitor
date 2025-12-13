@@ -1,27 +1,30 @@
-// export interface Person {
-//     name: string
-// }
-//
-// const nick: Person = {
-//     name: 'Nick',
-// }
+import { Transport } from './transport'
+import { MonitoringOptions } from './types'
 
-// window.onload = () => {
-//     // console.log(nick)
-// }
+export type { Transport } from './transport'
+export type { Integration } from './types'
 
-export function init() {
-    // window.addEventListener('error', event => {
-    //     console.log('error', event)
-    // })
-    //
-    // window.addEventListener('unhandledrejection', event => {
-    //     console.log('unhandledrejection', event)
-    // })
-    //
-    // new PerformanceObserver(list => {
-    //     for (const entry of list.getEntries()) {
-    //         console.log(entry)
-    //     }
-    // })
+export let getTransport: () => Transport | null = () => null
+
+export class Monitoring {
+    private transport: Transport | null = null
+
+    constructor(private options: MonitoringOptions) {}
+
+    init(transport: Transport) {
+        this.transport = transport
+        getTransport = () => transport
+
+        this.options.integrations?.forEach(integration => {
+            integration.init(transport)
+        })
+    }
+
+    reportMessage(message: string) {
+        this.transport?.send({ type: 'message', message })
+    }
+
+    reportEvent(event: unknown) {
+        this.transport?.send({ type: 'event', event })
+    }
 }

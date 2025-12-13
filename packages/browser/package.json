@@ -16,6 +16,7 @@
     "packageManager": "pnpm@10.13.1",
     "devDependencies": {
         "@my-monitor/browser-utils": "workspace:*",
+        "@my-monitor/core": "workspace:*",
         "tsup": "8.5.1"
     }
 }

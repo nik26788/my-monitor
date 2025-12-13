@@ -7,7 +7,10 @@ import viteLogo from '/vite.svg'
 import { setupCounter } from './counter.ts'
 import typescriptLogo from './typescript.svg'
 
-init()
+const monitoring = init({
+    dsn: 'xxx',
+    integration: [],
+})
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -28,6 +31,14 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 `
 
 setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+
+document.addEventListener('click', () => {
+    monitoring.reportMessage('click')
+    monitoring.reportEvent({
+        type: 'page-load',
+        message: 'hello world',
+    })
+})
 
 // myUndefinedFunction()
 
