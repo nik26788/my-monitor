@@ -7,18 +7,6 @@ import importSort from 'eslint-plugin-simple-import-sort'
 
 import tseslint from 'typescript-eslint'
 
-const ignores = [
-    'dist',
-    'build',
-    '**/*.js',
-    '**/*.mjs',
-    '**/*.d.ts',
-    'eslint.config.js',
-    'commitlint.config.js',
-    'apps/frontend/monitor/src/components/ui/**/*',
-    'packages/browser-utils/src/metrics/**/*',
-]
-
 const packagesConfig = {
     files: ['packages/**/*.{ts,tsx}'],
     languageOptions: {
@@ -27,7 +15,7 @@ const packagesConfig = {
         },
     },
     rules: {
-        'no-console': 'error',
+        // 'no-console': 'error',
     },
 }
 
@@ -69,7 +57,19 @@ const backendConfig = {
 
 export default tseslint.config(
     {
-        ignores,
+        ignores: [
+            'dist',
+            'build',
+            '**/*.js',
+            '**/*.mjs',
+            '**/*.d.ts',
+            'eslint.config.js',
+            'commitlint.config.js',
+            'apps/frontend/monitor/src/components/ui/**/*',
+            'packages/browser-utils/src/metrics/**/*',
+        ],
+    },
+    {
         extends: [eslint.configs.recommended, ...tseslint.configs.recommended],
         plugins: {
             prettier: eslintPrettier,

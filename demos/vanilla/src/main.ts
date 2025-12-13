@@ -1,6 +1,6 @@
 import './style.css'
 
-import { init } from '@my-monitor/core'
+import { init } from '@my-monitor/browser-utils'
 
 import viteLogo from '/vite.svg'
 
