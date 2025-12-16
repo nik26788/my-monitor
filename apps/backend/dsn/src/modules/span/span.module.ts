@@ -1,18 +1,13 @@
 import { Module } from '@nestjs/common'
 
-import { ClickhouseModule } from '../../fundamentals/clickhouse/clickhouse.module'
+import { EmailModule } from '../email/email.module'
+import { EmailService } from '../email/email.service'
 import { SpanController } from './span.controller'
 import { SpanService } from './span.service'
 
 @Module({
-    imports: [
-        ClickhouseModule.forRoot({
-            url: 'http://43.132.130.236:8123',
-            username: 'nick',
-            password: 'nickclickhouse',
-        }),
-    ],
+    imports: [EmailModule],
     controllers: [SpanController],
-    providers: [SpanService],
+    providers: [SpanService, EmailService],
 })
 export class SpanModule {}
