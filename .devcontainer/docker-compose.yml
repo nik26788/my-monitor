@@ -1,0 +1,15 @@
+version: '1'
+
+service:
+  my-monitor-clickhouse:
+    image: clickhouse:25.0.0
+      container_name: my-container-clickhouse
+        ports:
+          - '8123:8123'
+          - '9000:9000'
+        environment:
+          - CLICKHOUSE_USER=nick
+          - CLICKHOUSE_PASSWORD=nickclickhouse
+          - CLICKHOUSE_DB=nick
+        volumes:
+          - ./clickhouse_data:/var/lib/clickhouse
