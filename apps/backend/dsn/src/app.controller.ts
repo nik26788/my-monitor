@@ -10,4 +10,9 @@ export class AppController {
     getHello(): string {
         return this.appService.getHello()
     }
+
+    @Get('/clickhouse-info')
+    getClickhouseInfo() {
+        return this.appService.getClickhouseInfo()
+    }
 }
