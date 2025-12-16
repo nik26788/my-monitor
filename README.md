@@ -82,3 +82,10 @@ app_id, info, created_at, event_type, message, concat('miaoma', event_type) AS p
 insert into base_monitor_storage (app_id, info, event_type, message)
 values ('1', 'info', '{"name": "nick", "age": "23"}', 'Hello world');
 ```
+
+## montior前端项目
+
+### 创建项目
+
+cd apps/frontend
+pnpm create vite monitor -- template=react-ts
