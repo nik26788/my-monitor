@@ -1,6 +1,6 @@
 {
     "import": ["@cspell/dict-lorem-ipsum/cspell-ext.json"],
-    "ignorePaths": ["./packages/browser-utils/src/metrics/**/*"],
+    "ignorePaths": ["./packages/browser-utils/src/metrics/**/*", "./apps/frontend/monitor/src/components/**/*"],
     "caseSensitive": false,
     "dictionaries": ["custom-words"],
     "dictionaryDefinitions": [
