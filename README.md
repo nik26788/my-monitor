@@ -83,6 +83,10 @@ insert into base_monitor_storage (app_id, info, event_type, message)
 values ('1', 'info', '{"name": "nick", "age": "23"}', 'Hello world');
 ```
 
+## docker
+
+docker compose -p my-monitor -f .devcontainer/docker-compose.yml up -d
+
 ## montior前端项目
 
 ### 创建项目
