@@ -30,15 +30,27 @@ export class ApplicationService {
         }
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} application`
+    async findOne(id: string) {
+        return await this.applicationRepository.findOne({
+            where: {
+                id,
+            },
+        })
     }
 
     update(id: number, updateApplicationDto: UpdateApplicationDto) {
         return `This action updates a #${id} application, ${updateApplicationDto}`
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} application`
+    async remove(id: string) {
+        const application = await this.findOne(id)
+
+        if (!application) {
+            throw Error('Application is not exist.')
+        }
+
+        await this.applicationRepository.update(id, {
+            isDelete: true,
+        })
     }
 }

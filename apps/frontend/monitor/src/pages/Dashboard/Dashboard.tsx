@@ -1,10 +1,66 @@
+import { useQuery } from '@tanstack/react-query'
+import React from 'react'
+
 import { AppSidebar } from '@/components/app-sidebar'
 import { ChartAreaInteractive } from '@/components/chart-area-interactive'
 import { SectionCards } from '@/components/section-cards'
 import { SiteHeader } from '@/components/site-header'
+import { Button } from '@/components/ui/button'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
+import { Spinner } from '@/components/ui/spinner'
 
-export default function Page() {
+export default function Dashboard() {
+    const [isLoading, setIsLoading] = React.useState(false)
+
+    const {
+        data: applications,
+        isLoading: applicationLoading,
+        refetch,
+    } = useQuery({
+        queryKey: ['application'],
+        queryFn: async () => {
+            const response = await fetch('/api/application', {
+                method: 'GET',
+            })
+            return response.json()
+        },
+    })
+
+    // console.log(applications)
+
+    const handleCreate = async () => {
+        try {
+            setIsLoading(true)
+            await fetch('/api/application', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    type: 'react',
+                    name: 'react 的应用' + Math.random(),
+                }),
+            })
+
+            await refetch()
+            // eslint-disable-next-line
+        } catch (error) {
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    const handleRemove = async (id: string) => {
+        await fetch('/api/application/' + id, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+
+        await refetch()
+    }
+
     return (
         <SidebarProvider
             style={
@@ -23,6 +79,43 @@ export default function Page() {
                             <SectionCards />
                             <div className="px-4 lg:px-6">
                                 <ChartAreaInteractive />
+                            </div>
+                            <div className="p-4">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {applications &&
+                                            applications.data &&
+                                            applications.data.map(item => {
+                                                return (
+                                                    <tr key={item.id}>
+                                                        <td className="px-3">{item.id}</td>
+                                                        <td className="px-3">{item.name}</td>
+                                                        <td className="px-3">{item.type}</td>
+                                                        <td className="px-3">
+                                                            <div className="py-1">
+                                                                <Button className="bg-red-600" onClick={() => handleRemove(item.id)}>
+                                                                    Delete
+                                                                </Button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                    </tbody>
+                                </table>
+                                {applicationLoading && <Spinner />}
+                                <Button className="mt-3" onClick={handleCreate} disabled={isLoading}>
+                                    {isLoading && <Spinner />}
+                                    Create Application
+                                </Button>
                             </div>
                         </div>
                     </div>
