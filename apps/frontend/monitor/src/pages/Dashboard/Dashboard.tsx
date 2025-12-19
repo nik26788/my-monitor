@@ -9,6 +9,12 @@ import { Button } from '@/components/ui/button'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
 import { Spinner } from '@/components/ui/spinner'
 
+interface Application {
+    id: string
+    name: string
+    type: 'vanilla' | 'react' | 'vue'
+}
+
 export default function Dashboard() {
     const [isLoading, setIsLoading] = React.useState(false)
 
@@ -38,6 +44,7 @@ export default function Dashboard() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    token: localStorage.getItem('access_token') || '',
                 },
                 body: JSON.stringify({
                     type: 'react',
@@ -58,6 +65,7 @@ export default function Dashboard() {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                token: localStorage.getItem('access_token') || '',
             },
         })
 
@@ -96,7 +104,7 @@ export default function Dashboard() {
                                     <tbody>
                                         {applications &&
                                             applications.data &&
-                                            applications.data.map(item => {
+                                            applications.data.map((item: Application) => {
                                                 return (
                                                     <tr key={item.id}>
                                                         <td className="px-3">{item.id}</td>

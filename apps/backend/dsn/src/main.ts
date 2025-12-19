@@ -11,7 +11,7 @@ async function bootstrap() {
 
     app.enableCors({
         origin: (origin, callback) => {
-            if (!origin || origin.includes('localhost') || origin.includes('nikdev.cn')) {
+            if (!origin || origin.includes('192.168.208.1') || origin.includes('nikdev.cn')) {
                 callback(null, true)
             } else {
                 callback(new Error('Not allowed by CORS'))

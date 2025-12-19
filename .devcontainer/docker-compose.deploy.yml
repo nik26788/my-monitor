@@ -1,0 +1,29 @@
+version: '1'
+
+include:
+    - docker-compose.yml
+
+services:
+    my-monitor-server:
+        image: node:22-alpine
+        container_name: my-monitor-server
+        ports:
+            - '3001:3001'
+        environment:
+            - NODE_ENV=production
+        volumes:
+            - ../:/app/monitor
+        working_dir: /app/monitor/apps/backend/monitor
+        command: 'node dist/main.js'
+        depends_on:
+            - my-monitor-clickhouse
+            - my-monitor-postgres
+    my-monitor-frontend:
+        image: caddy:2.11-alpine
+        container_name: my-monitor-frontend
+        ports:
+            - '8080:8080'
+            - '443:443'
+        volumes:
+            - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+            - ../apps/frontend/monitor/dist:/app/frontend/monitor/dist

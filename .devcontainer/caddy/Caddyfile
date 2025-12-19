@@ -1,0 +1,23 @@
+:8080 {
+
+        encode zstd gzip
+
+        header +Cache-Control "max-age=0, private, must-revalidate"
+
+        handle_path /api/* {
+                rewrite * /api{path}
+                reverse_proxy 192.168.208.1:3001
+        }
+
+
+        uri strip_suffix /
+
+        root * /app/frontend/monitor/dist
+
+        handle {
+                templates
+                try_files {path}.html {path} /
+                file_server
+        }
+
+}
