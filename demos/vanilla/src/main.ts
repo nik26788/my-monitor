@@ -42,7 +42,7 @@ document.addEventListener('click', () => {
 
 // myUndefinedFunction()
 
-new Promise((resolve, reject) => {
+new Promise((_, reject) => {
     reject('Oops!!!')
 })
 // .catch(error => {
