@@ -21,6 +21,9 @@ export default function Dashboard() {
         queryFn: async () => {
             const response = await fetch('/api/application', {
                 method: 'GET',
+                headers: {
+                    token: localStorage.getItem('access_token') || '',
+                },
             })
             return response.json()
         },

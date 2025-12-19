@@ -1,10 +1,17 @@
+import { AlertCircleIcon } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 
-export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) {
+import { Alert, AlertTitle } from './ui/alert'
+
+export function LoginForm({
+    className,
+    ...props
+}: React.ComponentProps<'div'> & { errorMessage: string; onLogin: (e: FormData) => Promise<void> }) {
     return (
         <div className={cn('flex flex-col gap-6', className)} {...props}>
             <Card>
@@ -13,11 +20,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                     <CardDescription>Enter your email below to login to your account</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <form>
+                    <form action={formData => props.onLogin(formData)}>
                         <FieldGroup>
                             <Field>
-                                <FieldLabel htmlFor="email">Email</FieldLabel>
-                                <Input id="email" type="email" placeholder="m@example.com" required />
+                                <FieldLabel htmlFor="username">Email</FieldLabel>
+                                <Input id="username" name="username" type="email" placeholder="m@example.com" required />
                             </Field>
                             <Field>
                                 <div className="flex items-center">
@@ -26,9 +33,15 @@ export function LoginForm({ className, ...props }: React.ComponentProps<'div'>) 
                                         Forgot your password?
                                     </a>
                                 </div>
-                                <Input id="password" type="password" required />
+                                <Input id="password" name="password" type="password" required />
                             </Field>
                             <Field>
+                                {props.errorMessage && (
+                                    <Alert variant="destructive">
+                                        <AlertCircleIcon />
+                                        <AlertTitle>{props.errorMessage}</AlertTitle>
+                                    </Alert>
+                                )}
                                 <Button type="submit">Login</Button>
                                 <Button variant="outline" type="button">
                                     Login with Google

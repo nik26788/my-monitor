@@ -6,7 +6,9 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { postgresConfig } from './config/postgres/postgres.config'
+import { AdminModule } from './modules/admin/admin.module'
 import { ApplicationModule } from './modules/application/application.module'
+import { AuthModule } from './modules/auth/auth.module'
 
 @Module({
     imports: [
@@ -21,6 +23,8 @@ import { ApplicationModule } from './modules/application/application.module'
             synchronize: true,
         }),
         ApplicationModule,
+        AdminModule,
+        AuthModule,
     ],
     controllers: [AppController],
     providers: [AppService],

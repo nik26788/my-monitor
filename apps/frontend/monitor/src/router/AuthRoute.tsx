@@ -7,7 +7,7 @@ interface AuthRouteProps {
 }
 
 const AuthRoute: React.FC<AuthRouteProps> = ({ children }) => {
-    if (!localStorage.getItem('token')) {
+    if (!localStorage.getItem('access_token')) {
         return <Navigate to={`account/login?redirect=${window.location.pathname}`} />
     }
     return children
