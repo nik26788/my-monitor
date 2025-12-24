@@ -9,23 +9,7 @@ import { EmailModule } from './fundamentals/email/email.module'
 import { SpanModule } from './modules/span/span.module'
 
 @Module({
-    imports: [
-        ClickhouseModule.forRoot({
-            url: clickhouseConfig.url,
-            username: clickhouseConfig.username,
-            password: clickhouseConfig.password,
-        }),
-        EmailModule.forRoot({
-            host: 'smtp.163.com',
-            port: 465,
-            secure: true,
-            auth: {
-                user: emailConfig.username,
-                pass: emailConfig.password,
-            },
-        }),
-        SpanModule,
-    ],
+    imports: [ClickhouseModule.forRoot({ ...clickhouseConfig }), EmailModule.forRoot({ ...emailConfig }), SpanModule],
     controllers: [AppController],
     providers: [AppService],
 })

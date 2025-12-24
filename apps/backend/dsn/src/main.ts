@@ -5,20 +5,28 @@ import './config/email/email.env'
 import { NestFactory } from '@nestjs/core'
 
 import { AppModule } from './app.module'
+import { HttpExceptionFilter } from './common/filters/http-exception/http-exception.filter'
+import { TransformInterceptor } from './common/interceptors/transform/transform.interceptor'
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule)
 
+    app.useGlobalFilters(new HttpExceptionFilter())
+    app.useGlobalInterceptors(new TransformInterceptor())
+
+    app.setGlobalPrefix(process.env.APP_PREFIX ?? '')
+
     app.enableCors({
         origin: (origin, callback) => {
-            if (!origin || origin.includes('192.168.208.1') || origin.includes('nikdev.cn')) {
+            if (!origin || origin.includes('localhost') || origin.includes('nikdev.cn')) {
                 callback(null, true)
             } else {
                 callback(new Error('Not allowed by CORS'))
             }
         },
+        credentials: true,
     })
 
-    await app.listen(process.env.PORT ?? 3000)
+    await app.listen(process.env.APP_PORT ?? 3000)
 }
 bootstrap()
