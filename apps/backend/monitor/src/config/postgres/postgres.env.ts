@@ -1,11 +1,11 @@
 import { z } from 'zod'
 
 const postgresEnvSchema = z.object({
-    POSTGRES_HOST: z.string().min(1),
+    POSTGRES_HOST: z.string(),
     POSTGRES_PORT: z.coerce.number().int().positive(),
-    POSTGRES_USERNAME: z.string().min(1),
-    POSTGRES_PASSWORD: z.string().min(1),
-    POSTGRES_DATABASE: z.string().min(1),
+    POSTGRES_USERNAME: z.string(),
+    POSTGRES_PASSWORD: z.string(),
+    POSTGRES_DATABASE: z.string(),
 })
 
 export const postgresEnv = postgresEnvSchema.parse(process.env)

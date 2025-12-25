@@ -14,7 +14,13 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         const user = await this.authService.validateUser(username, password)
 
         if (!user) {
-            throw new HttpException({ message: 'authorized failed', error: 'please try again later' }, HttpStatus.BAD_REQUEST)
+            throw new HttpException(
+                {
+                    message: 'authorized failed',
+                    error: 'please try again later',
+                },
+                HttpStatus.BAD_REQUEST
+            )
         }
 
         return user

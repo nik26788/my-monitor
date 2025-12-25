@@ -1,5 +1,10 @@
-import { PartialType } from '@nestjs/mapped-types'
+import z from 'zod'
 
-import { CreateApplicationDto } from './create-application.dto'
+/**
+ * Update application
+ */
+export const updateApplicationSchema = z.object({
+    id: z.coerce.number(),
+})
 
-export class UpdateApplicationDto extends PartialType(CreateApplicationDto) {}
+export type UpdateApplicationDto = z.infer<typeof updateApplicationSchema>

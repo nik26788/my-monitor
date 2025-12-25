@@ -1,9 +1,7 @@
-import { Injectable } from '@nestjs/common'
+import { ConflictException, Injectable, Logger, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
-import { CreateApplicationDto } from './dto/create-application.dto'
-import { UpdateApplicationDto } from './dto/update-application.dto'
 import { Application } from './entities/application.entity'
 
 @Injectable()
@@ -12,45 +10,80 @@ export class ApplicationService {
         @InjectRepository(Application)
         private readonly applicationRepository: Repository<Application>
     ) {}
-    async create(createApplicationDto: CreateApplicationDto) {
-        const result = await this.applicationRepository.save(createApplicationDto)
-        return result
+
+    async create(payload) {
+        const { name } = payload
+        const duplicate = await this.applicationRepository.findOne({
+            where: { name },
+        })
+
+        if (duplicate) {
+            throw new ConflictException('application name already exist')
+        }
+
+        try {
+            const result = await this.applicationRepository.save(payload)
+            Logger.log('result ' + result, 'ApplicationService')
+
+            return result
+        } catch (error) {
+            Logger.log('error ' + error, 'ApplicationService')
+        }
     }
 
-    async findAll() {
+    async findAll(params: { userId: number }) {
+        // const [data, count] = await this.applicationRepository
+        //     .createQueryBuilder()
+        //     .where('app.user_id = :userId', { userId: params.userId })
+        //     .getManyAndCount()
+
         const [data, count] = await this.applicationRepository.findAndCount({
             where: {
-                isDelete: false,
+                // userId: params.userId,
+                user: { id: params.userId },
             },
         })
-
-        return {
-            data,
-            count,
-        }
+        return { data, count }
     }
 
-    async findOne(id: string) {
+    async findOne(id: number) {
         return await this.applicationRepository.findOne({
-            where: {
-                id,
-            },
+            where: { id },
         })
     }
 
-    update(id: number, updateApplicationDto: UpdateApplicationDto) {
-        return `This action updates a #${id} application, ${updateApplicationDto}`
-    }
+    async update(id: number, payload) {
+        const updateAt = new Date().toISOString()
+        const result = await this.applicationRepository.update(id, {
+            updateAt,
+            ...payload,
+        })
 
-    async remove(id: string) {
-        const application = await this.findOne(id)
-
-        if (!application) {
-            throw Error('Application is not exist.')
+        if (result.affected === 0) {
+            throw new NotFoundException('application not found')
         }
 
-        await this.applicationRepository.update(id, {
-            isDelete: true,
-        })
+        return true
+    }
+
+    async remove(payload: { userId: number; appId: string }) {
+        // const application = await this.findOne(appId)
+
+        // if (!application) {
+        //     throw new NotFoundException('application not found')
+        // }
+
+        // const result = await this.applicationRepository.update(id, {
+        //     isDelete: true,
+        // })
+
+        const { appId, userId } = payload
+        const result = await this.applicationRepository.delete({ appId, user: { id: userId } })
+
+        if (result.affected === 0) {
+            throw new NotFoundException('application not found')
+        }
+
+        return result.raw[0]
     }
 }
