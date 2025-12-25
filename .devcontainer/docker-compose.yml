@@ -1,27 +1,26 @@
 version: '1'
 
 services:
-  my-monitor-clickhouse:
-    image: clickhouse:25.10
-    container_name: my-monitor-clickhouse
-    ports:
-      - '8123:8123'
-      - '9000:9000'
-    environment:
-      - CLICKHOUSE_USER=nick
-      - CLICKHOUSE_PASSWORD=nickclickhouse
-      - CLICKHOUSE_DB=nick
-    volumes:
-      - ./clickhouse_data:/var/lib/clickhouse
-  my-monitor-postgres:
-    image: postgres:18.1
-    container_name: my-monitor-postgres
-    ports:
-      - '5432:5432'
-    environment:
-      - POSTGRES_USER=nick
-      - POSTGRES_PASSWORD=nickpostgres
-      - POSTGRES_DB=nick
-    volumes:
-      - ./postgresql_data:/var/lib/postgresql
-
+    my-monitor-clickhouse:
+        image: clickhouse:25.10
+        container_name: my-monitor-clickhouse
+        ports:
+            - '8123:8123'
+            - '9000:9000'
+        environment:
+            - CLICKHOUSE_USER=nick
+            - CLICKHOUSE_PASSWORD=nickclickhouse
+            - CLICKHOUSE_DB=nick
+        volumes:
+            - ./clickhouse_data:/var/lib/clickhouse
+    my-monitor-postgres:
+        image: postgres:18.1
+        container_name: my-monitor-postgres
+        ports:
+            - '5432:5432'
+        environment:
+            - POSTGRES_USER=nick
+            - POSTGRES_PASSWORD=nickpostgres
+            - POSTGRES_DB=nick
+        volumes:
+            - ./postgresql_data:/var/lib/postgresql

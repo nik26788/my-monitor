@@ -8,7 +8,7 @@ import { setupCounter } from './counter.ts'
 import typescriptLogo from './typescript.svg'
 
 const monitoring = init({
-    dsn: 'http://192.168.208.1:3000/tracking/vanilla018asd87',
+    dsn: 'http://localhost:3300/tracking/vanilla018asd87',
     integration: [],
 })
 
