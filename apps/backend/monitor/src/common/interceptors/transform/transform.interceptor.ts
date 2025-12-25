@@ -28,14 +28,16 @@ export class TransformInterceptor implements NestInterceptor {
         })
 
         return next.handle().pipe(
-            tap(data => {
+            tap(() => {
                 const responseTime = Date.now() - now
+                const response = context.switchToHttp().getResponse()
+                const { statusCode } = response
 
                 this.logger.log('Response Info:', {
                     url,
                     method,
                     responseTime: `${responseTime}ms`,
-                    statusCode: data?.statusCode || 200,
+                    statusCode,
                     code: 0,
                     msg: 'success',
                 })

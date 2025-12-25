@@ -10,7 +10,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
         const request = ctx.getRequest()
         const response = ctx.getResponse()
         const status = exception instanceof HttpException ? exception.getStatus() : 500
-        // const message = exception instanceof HttpException ? exception.message : 'Internal Server Error'
 
         let validMessage = ''
 
@@ -31,12 +30,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
             timestamp: new Date().toISOString(),
             message: validMessage || message,
         }
-
         response.status(status).send({ ...errorResponse })
 
-        const { method, url, params, query, body, headers } = request
-
-        this.logger.log('Request Info:', { url, method, headers, body, query, params })
-        this.logger.log('Response Info:', { url, method, status, message: errorResponse.message })
+        const { method, url } = request
+        this.logger.log('Response Info:', { url, method, statusCode: status, message: errorResponse.message })
     }
 }
