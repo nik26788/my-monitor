@@ -10,22 +10,10 @@ import { TransformInterceptor } from './common/interceptors/transform/transform.
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule)
-
     app.useGlobalFilters(new HttpExceptionFilter())
     app.useGlobalInterceptors(new TransformInterceptor())
-
     app.setGlobalPrefix(process.env.APP_PREFIX ?? '')
-
-    app.enableCors({
-        origin: (origin, callback) => {
-            if (!origin || origin.includes('localhost') || origin.includes('nikdev.cn')) {
-                callback(null, true)
-            } else {
-                callback(new Error('Not allowed by CORS'))
-            }
-        },
-        credentials: true,
-    })
+    app.enableCors()
 
     await app.listen(process.env.APP_PORT ?? 3000)
 }
