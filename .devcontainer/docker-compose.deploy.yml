@@ -4,20 +4,35 @@ include:
     - docker-compose.yml
 
 services:
+    my-monitor-dsn-server:
+        image: node:22-alpine
+        container_name: my-monitor-dsn-server
+        ports:
+            - '3300:3300'
+        environment:
+            - NODE_ENV=production
+        volumes:
+            - ../:/app/dsn
+        working_dir: /app/dsn/apps/backend/dsn
+        command: 'node dist/main.js'
+        depends_on:
+            - my-monitor-clickhouse
+
     my-monitor-server:
         image: node:22-alpine
         container_name: my-monitor-server
         ports:
-            - '3001:3001'
+            - '3301:3301'
         environment:
             - NODE_ENV=production
         volumes:
             - ../:/app/monitor
+            - ../logs/monitor-server:/app/monitor/apps/backend/monitor/logs
         working_dir: /app/monitor/apps/backend/monitor
         command: 'node dist/main.js'
         depends_on:
-            - my-monitor-clickhouse
             - my-monitor-postgres
+
     my-monitor-frontend:
         image: caddy:2.11-alpine
         container_name: my-monitor-frontend
@@ -27,3 +42,6 @@ services:
         volumes:
             - ./caddy/Caddyfile:/etc/caddy/Caddyfile
             - ../apps/frontend/monitor/dist:/app/frontend/monitor/dist
+        depends_on:
+            - my-monitor-server
+            - my-monitor-dsn-server
