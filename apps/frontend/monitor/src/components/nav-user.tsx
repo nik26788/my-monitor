@@ -1,4 +1,5 @@
 import { IconCreditCard, IconDotsVertical, IconLogout, IconNotification, IconUserCircle } from '@tabler/icons-react'
+import { useNavigate } from 'react-router-dom'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
@@ -22,6 +23,17 @@ export function NavUser({
     }
 }) {
     const { isMobile } = useSidebar()
+    const navigate = useNavigate()
+
+    const handleLogout = async () => {
+        const { data } = await fetch('/api/auth/logout', { method: 'POST' }).then(response => response.json())
+        if (data) {
+            localStorage.removeItem('access_token')
+            navigate('/account/login')
+        } else {
+            // toast error message
+        }
+    }
 
     return (
         <SidebarMenu>
@@ -77,7 +89,7 @@ export function NavUser({
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleLogout}>
                             <IconLogout />
                             Log out
                         </DropdownMenuItem>

@@ -33,11 +33,11 @@ export default function Page() {
             }),
         })
 
-        const data = await response.json()
+        const { code, data } = await response.json()
 
-        if (data.access_token) {
+        if (code === 0 && data.access_token) {
             localStorage.setItem('access_token', data.access_token)
-            navigate('/dashboard')
+            navigate('/projects')
             setErrorMessage('')
         } else {
             const { message } = data

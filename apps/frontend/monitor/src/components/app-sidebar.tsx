@@ -1,25 +1,7 @@
-import {
-    IconCamera,
-    IconChartBar,
-    IconDashboard,
-    IconDatabase,
-    IconFileAi,
-    IconFileDescription,
-    IconFileWord,
-    IconFolder,
-    IconHelp,
-    IconInnerShadowTop,
-    IconListDetails,
-    IconReport,
-    IconSearch,
-    IconSettings,
-    IconUsers,
-} from '@tabler/icons-react'
+import { Bug, CalendarCheck, Lightbulb, Package, Siren, Zap } from 'lucide-react'
 import * as React from 'react'
 
-import { NavDocuments } from '@/components/nav-documents'
 import { NavMain } from '@/components/nav-main'
-import { NavSecondary } from '@/components/nav-secondary'
 import { NavUser } from '@/components/nav-user'
 import {
     Sidebar,
@@ -31,6 +13,8 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar'
 
+const issues = [1, 2]
+
 const data = {
     user: {
         name: 'shadcn',
@@ -39,111 +23,37 @@ const data = {
     },
     navMain: [
         {
-            title: 'Dashboard',
-            url: '#',
-            icon: IconDashboard,
-        },
-        {
-            title: 'Lifecycle',
-            url: '#',
-            icon: IconListDetails,
-        },
-        {
-            title: 'Analytics',
-            url: '#',
-            icon: IconChartBar,
-        },
-        {
+            name: 'projects',
             title: 'Projects',
-            url: '#',
-            icon: IconFolder,
+            icon: Package,
+            gap: true,
         },
         {
-            title: 'Team',
-            url: '#',
-            icon: IconUsers,
-        },
-    ],
-    navClouds: [
-        {
-            title: 'Capture',
-            icon: IconCamera,
-            isActive: true,
-            url: '#',
-            items: [
-                {
-                    title: 'Active Proposals',
-                    url: '#',
-                },
-                {
-                    title: 'Archived',
-                    url: '#',
-                },
-            ],
+            name: 'issues',
+            title: 'Issues',
+            icon: Bug,
+            badge: issues.length || 0,
         },
         {
-            title: 'Proposal',
-            icon: IconFileDescription,
-            url: '#',
-            items: [
-                {
-                    title: 'Active Proposals',
-                    url: '#',
-                },
-                {
-                    title: 'Archived',
-                    url: '#',
-                },
-            ],
+            name: 'performance',
+            title: 'Performance',
+            icon: Zap,
+            gap: true,
         },
         {
-            title: 'Prompts',
-            icon: IconFileAi,
-            url: '#',
-            items: [
-                {
-                    title: 'Active Proposals',
-                    url: '#',
-                },
-                {
-                    title: 'Archived',
-                    url: '#',
-                },
-            ],
-        },
-    ],
-    navSecondary: [
-        {
-            title: 'Settings',
-            url: '#',
-            icon: IconSettings,
+            name: 'dashboard',
+            title: 'Dashboard',
+            icon: Lightbulb,
         },
         {
-            title: 'Get Help',
-            url: '#',
-            icon: IconHelp,
+            name: 'crons',
+            title: 'Crons',
+            icon: CalendarCheck,
         },
         {
-            title: 'Search',
-            url: '#',
-            icon: IconSearch,
-        },
-    ],
-    documents: [
-        {
-            name: 'Data Library',
-            url: '#',
-            icon: IconDatabase,
-        },
-        {
-            name: 'Reports',
-            url: '#',
-            icon: IconReport,
-        },
-        {
-            name: 'Word Assistant',
-            url: '#',
-            icon: IconFileWord,
+            name: 'alerts',
+            title: 'Alerts',
+            icon: Siren,
         },
     ],
 }
@@ -155,9 +65,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton asChild className="data-[slot=sidebar-menu-button]:!p-1.5">
-                            <a href="#">
-                                <IconInnerShadowTop className="!size-5" />
-                                <span className="text-base font-semibold">Acme Inc.</span>
+                            <a href="/" className="flex item-center gap-2">
+                                <img src="/logo.png" className="w-10" />
+                                <span className="text-base font-semibold">Web Monitor.</span>
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -165,8 +75,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />
-                <NavDocuments items={data.documents} />
-                <NavSecondary items={data.navSecondary} className="mt-auto" />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={data.user} />

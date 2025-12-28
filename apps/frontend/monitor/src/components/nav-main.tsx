@@ -1,4 +1,6 @@
-import { type Icon, IconCirclePlusFilled, IconMail } from '@tabler/icons-react'
+import { IconCirclePlusFilled, IconMail } from '@tabler/icons-react'
+import type { LucideIcon } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 import { Button } from '@/components/ui/button'
 import { SidebarGroup, SidebarGroupContent, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
@@ -7,11 +9,15 @@ export function NavMain({
     items,
 }: {
     items: {
+        name: string
         title: string
-        url: string
-        icon?: Icon
+        icon?: LucideIcon
+        gap?: boolean
     }[]
 }) {
+    const pathname = location.pathname.slice(1)
+    const navigate = useNavigate()
+
     return (
         <SidebarGroup>
             <SidebarGroupContent className="flex flex-col gap-2">
@@ -33,7 +39,11 @@ export function NavMain({
                 <SidebarMenu>
                     {items.map(item => (
                         <SidebarMenuItem key={item.title}>
-                            <SidebarMenuButton tooltip={item.title}>
+                            <SidebarMenuButton
+                                tooltip={item.title}
+                                isActive={pathname.startsWith(item.name)}
+                                onClick={() => navigate(`/${item.name}`)}
+                            >
                                 {item.icon && <item.icon />}
                                 <span>{item.title}</span>
                             </SidebarMenuButton>
