@@ -19,10 +19,12 @@ export class ApplicationController {
     @Post()
     create(@Body(new ZodValidationPipe(createApplicationSchema)) body: CreateApplicationDto, @CurrentUser() user) {
         const application = new Application(body)
-        Reflect.set<Application, 'appId'>(application, 'appId', body.type + nanoid())
+        application.appId = body.type + nanoid()
+        application.userId = user.id
+        // Reflect.set<Application, 'appId'>(application, 'appId', body.type + nanoid())
         const data = this.applicationService.create({
             ...application,
-            userId: user.id,
+            // userId: user.id,
         })
 
         return data
@@ -32,7 +34,7 @@ export class ApplicationController {
     findAll(@CurrentUser() user) {
         Logger.log('Get application by useId ' + user.id, 'ApplicationController')
 
-        return this.applicationService.findAll(user.id)
+        return this.applicationService.findAll({ userId: user.id })
     }
 
     @Get(':id')
@@ -52,8 +54,7 @@ export class ApplicationController {
 
     @Delete(':appId')
     remove(@Param(new ZodValidationPipe(deleteApplicationSchema)) params: DeleteApplicationDto, @CurrentUser() user) {
-        Logger.log('Delete application by appId ' + params, 'ApplicationController')
-
+        Logger.log('Delete application by appId ' + JSON.stringify(params), 'ApplicationController')
         return this.applicationService.remove({ appId: params.appId, userId: user.id })
     }
 }

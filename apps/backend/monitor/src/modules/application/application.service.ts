@@ -12,9 +12,9 @@ export class ApplicationService {
     ) {}
 
     async create(payload) {
-        const { name } = payload
+        const { name, userId } = payload
         const duplicate = await this.applicationRepository.findOne({
-            where: { name },
+            where: { name, userId },
         })
 
         if (duplicate) {
@@ -37,13 +37,14 @@ export class ApplicationService {
         //     .where('app.user_id = :userId', { userId: params.userId })
         //     .getManyAndCount()
 
-        const [data, count] = await this.applicationRepository.findAndCount({
+        const data = await this.applicationRepository.find({
             where: {
                 // userId: params.userId,
                 user: { id: params.userId },
             },
         })
-        return { data, count }
+        // Logger.log(JSON.stringify(data), 'ApplicationService')
+        return data
     }
 
     async findOne(id: number) {
@@ -79,6 +80,8 @@ export class ApplicationService {
 
         const { appId, userId } = payload
         const result = await this.applicationRepository.delete({ appId, user: { id: userId } })
+        Logger.log('userId ' + userId, 'ApplicationService')
+        Logger.log(result.affected, 'ApplicationService')
 
         if (result.affected === 0) {
             throw new NotFoundException('application not found')
