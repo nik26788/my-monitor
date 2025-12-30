@@ -8,7 +8,6 @@ export class TransformInterceptor implements NestInterceptor {
     constructor(private readonly logger: LoggerService) {}
     intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
         const now = Date.now()
-        // console.log('4. Interceptor (before) - Transform')
 
         if (context.getType() !== 'http') {
             return next.handle()
@@ -43,8 +42,6 @@ export class TransformInterceptor implements NestInterceptor {
                 })
             }),
             map((data: unknown) => {
-                // console.log('4. Interceptor (after) - Transform')
-
                 if (data && typeof data === 'object' && 'code' in data) {
                     return data
                 }
