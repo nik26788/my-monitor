@@ -1,4 +1,4 @@
-import { postgresEnv } from './postgres.env'
+import { postgresEnv } from './postgres-env.schema'
 
 export const postgresConfig = {
     host: postgresEnv.POSTGRES_HOST,
