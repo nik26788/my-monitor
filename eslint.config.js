@@ -65,6 +65,7 @@ export default tseslint.config(
             '**/*.d.ts',
             'eslint.config.js',
             'commitlint.config.js',
+            'scripts/**/*',
             'apps/frontend/monitor/src/components/ui/**/*',
             'packages/browser-utils/src/metrics/**/*',
         ],
