@@ -1,6 +1,6 @@
 import 'dotenv/config'
-import './config/clickhouse/clickhouse.env'
-import './config/email/email.env'
+import './config/clickhouse/clickhouse-env.schema'
+import './config/email/email-env.schema'
 
 import { NestFactory } from '@nestjs/core'
 
