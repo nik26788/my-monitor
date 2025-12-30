@@ -10,7 +10,7 @@ export class HttpClient {
     }
 
     get<T = unknown>(url: string, params = {}, config?: AxiosRequestConfig) {
-        return request<T>({
+        return request<unknown, T>({
             method: 'GET',
             url,
             params,
@@ -19,7 +19,7 @@ export class HttpClient {
     }
 
     post<T = unknown>(url: string, data = {}, config?: AxiosRequestConfig) {
-        return request<T>({
+        return request<unknown, T>({
             method: 'POST',
             url,
             data,
@@ -28,7 +28,7 @@ export class HttpClient {
     }
 
     put<T = unknown>(url: string, data = {}, config?: AxiosRequestConfig) {
-        return request<T>({
+        return request<unknown, T>({
             method: 'PUT',
             url,
             data,
@@ -37,7 +37,7 @@ export class HttpClient {
     }
 
     delete<T = unknown>(url: string, params = {}, config?: AxiosRequestConfig) {
-        return request<T>({
+        return request<unknown, T>({
             method: 'DELETE',
             url,
             params,

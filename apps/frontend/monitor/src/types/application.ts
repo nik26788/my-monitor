@@ -1,6 +1,7 @@
 export type ApplicationType = 'vanilla' | 'react' | 'vue'
 
 export interface ApplicationData {
+    id: number
     type: ApplicationType
     appId: string
     name: string

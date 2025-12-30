@@ -4,14 +4,7 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { createApplication, fetchApplicationList, removeApplication } from '@/services/application'
-import type { CreateApplicationPayload } from '@/types/application'
-
-interface Application {
-    id: string
-    name: string
-    type: 'vanilla' | 'react' | 'vue'
-    appId: string
-}
+import type { ApplicationData, CreateApplicationPayload } from '@/types/application'
 
 function ApplicationList() {
     const [isLoading, setIsLoading] = React.useState(false)
@@ -59,7 +52,7 @@ function ApplicationList() {
                 </thead>
                 <tbody>
                     {applications &&
-                        applications.map((item: Application) => {
+                        applications.map((item: ApplicationData) => {
                             return (
                                 <tr key={item.id}>
                                     <td className="px-3">{item.id}</td>
