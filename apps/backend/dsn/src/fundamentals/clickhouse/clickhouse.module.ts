@@ -10,8 +10,10 @@ export class ClickhouseModule {
             providers: [
                 {
                     provide: 'CLICKHOUSE_CLIENT',
-                    useFactory() {
-                        return createClient(options)
+                    useFactory: async () => {
+                        const client = createClient(options)
+                        await client.ping()
+                        return client
                     },
                 },
             ],

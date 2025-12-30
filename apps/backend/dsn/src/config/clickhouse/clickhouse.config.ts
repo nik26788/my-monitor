@@ -1,4 +1,4 @@
-import { clickhouseEnv } from './clickhouse.env'
+import { clickhouseEnv } from './clickhouse-env.schema'
 
 export const clickhouseConfig = {
     url: clickhouseEnv.CLICKHOUSE_URL,

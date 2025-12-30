@@ -1,4 +1,4 @@
-import { emailEnv } from './email.env'
+import { emailEnv } from './email-env.schema'
 
 export const emailConfig = {
     host: emailEnv.MAIL_HOST,
