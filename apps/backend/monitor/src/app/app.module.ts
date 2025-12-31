@@ -15,7 +15,7 @@ import { AuthModule } from '../modules/auth/auth.module'
             ...postgresConfig,
             type: 'postgres',
             synchronize: true,
-            entities: [join(__dirname, '**/*.entity{.ts,.js}')],
+            entities: [join(__dirname, '..', '**/*.entity{.ts,.js}')],
         }),
         ApplicationModule,
         AdminModule,

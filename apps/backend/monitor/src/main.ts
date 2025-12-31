@@ -1,5 +1,5 @@
 import 'dotenv/config'
-import './config/postgres/postgres.env'
+import './config/postgres/postgres-env.schema'
 
 import { NestFactory } from '@nestjs/core'
 
