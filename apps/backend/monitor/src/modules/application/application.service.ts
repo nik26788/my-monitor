@@ -42,6 +42,9 @@ export class ApplicationService {
                 // userId: params.userId,
                 user: { id: params.userId },
             },
+            order: {
+                createAt: 'DESC',
+            },
         })
         // Logger.log(JSON.stringify(data), 'ApplicationService')
         return data
