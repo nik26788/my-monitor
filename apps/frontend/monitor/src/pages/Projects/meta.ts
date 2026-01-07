@@ -8,7 +8,7 @@ export const appLogoMap: Record<ApplicationType, string> = {
 }
 
 export const appsOptions = [
-    { value: 'vanilla', label: 'Javascript', icon: appLogoMap.vanilla },
-    { value: 'react', label: 'React', icon: appLogoMap.react },
-    { value: 'vue', label: 'Vue', icon: appLogoMap.vue },
+    { value: 'vanilla', label: 'Javascript', icon: appLogoMap.vanilla, lineColorIndex: 1 },
+    { value: 'react', label: 'React', icon: appLogoMap.react, lineColorIndex: 2 },
+    { value: 'vue', label: 'Vue', icon: appLogoMap.vue, lineColorIndex: 3 },
 ]

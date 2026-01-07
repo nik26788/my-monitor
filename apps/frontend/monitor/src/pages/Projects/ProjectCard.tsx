@@ -9,17 +9,16 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { useToast } from '@/hooks/user-toast'
-import type { ApplicationData } from '@/types/application'
+import type { ApplicationData, ApplicationType } from '@/types/application'
 
-import { appLogoMap } from './meta'
+import { appLogoMap, appsOptions } from './meta'
 
 interface ProjectCardProps {
     application: ApplicationData
     onEdit: (app: ApplicationData) => void
     onDelete: (app: ApplicationData) => void
-    index: number
 }
-function ProjectCard({ application, onEdit, onDelete, index }: ProjectCardProps) {
+function ProjectCard({ application, onEdit, onDelete }: ProjectCardProps) {
     const { toast } = useToast()
     const copyAppId = (appId: string) => {
         copyText(appId)
@@ -27,6 +26,11 @@ function ProjectCard({ application, onEdit, onDelete, index }: ProjectCardProps)
             variant: 'success',
             title: 'Copied App ID',
         })
+    }
+
+    const getLineColorIndex = (value: ApplicationType) => {
+        const result = appsOptions.find(app => app.value === value)
+        return result ? result.lineColorIndex : 1
     }
 
     return (
@@ -63,7 +67,7 @@ function ProjectCard({ application, onEdit, onDelete, index }: ProjectCardProps)
                     config={{
                         resting: {
                             label: 'Resting',
-                            color: `var(--chart-${index + 1})`,
+                            color: `var(--chart-${getLineColorIndex(application.type)})`,
                         },
                     }}
                     className="h-[150px] w-full"

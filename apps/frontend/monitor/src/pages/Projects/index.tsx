@@ -139,8 +139,8 @@ export function Projects() {
 
     const applicationsContent = (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {applications?.map((app, index) => {
-                return <ProjectCard key={app.id} application={app} onEdit={handleEdit} onDelete={handleDelete} index={index} />
+            {applications?.map(app => {
+                return <ProjectCard key={app.id} application={app} onEdit={handleEdit} onDelete={handleDelete} />
             })}
             <ApplicationModal
                 mode="edit"
