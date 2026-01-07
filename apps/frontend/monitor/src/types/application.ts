@@ -11,10 +11,14 @@ export interface ApplicationData {
         date: string
         resting: number
     }[]
-    createdAt: Date
+    createAt: Date
 }
 
 export interface CreateApplicationPayload {
     type: ApplicationType | null
     name: string
+}
+
+export interface UpdateApplicationPayload extends CreateApplicationPayload {
+    id: number
 }

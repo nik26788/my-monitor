@@ -1,5 +1,5 @@
-import { PlusCircle } from 'lucide-react'
-import React from 'react'
+import { Edit, PlusCircle } from 'lucide-react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Button } from '@/components/ui/button'
@@ -17,49 +17,87 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
-import type { CreateApplicationPayload } from '@/types/application'
+import type { CreateApplicationPayload, UpdateApplicationPayload } from '@/types/application'
+import type { FormMode } from '@/types/common'
 
 import { appsOptions } from './meta'
 
-interface CreateProjectModalProps {
-    onCreateProject: (values: CreateApplicationPayload) => Promise<{ ok: boolean; errors?: Record<string, string> }>
+interface ApplicationModalProps {
+    mode: FormMode
+    initData?: CreateApplicationPayload | UpdateApplicationPayload
+    onCreate?: (values: CreateApplicationPayload) => Promise<{ ok: boolean; errors?: Record<string, string> }>
+    onUpdate?: (values: UpdateApplicationPayload) => Promise<{ ok: boolean; errors?: Record<string, string> }>
 }
 
-export function CreateApplicationModal(props: CreateProjectModalProps) {
-    const form = useForm<CreateApplicationPayload>({
+export function ApplicationModal(props: ApplicationModalProps) {
+    const isEdit = props.mode === 'edit'
+
+    const form = useForm<CreateApplicationPayload | UpdateApplicationPayload>({
         defaultValues: {
-            type: null,
-            name: '',
+            type: props.initData?.type ?? null,
+            name: props.initData?.name ?? '',
         },
     })
+
+    useEffect(() => {
+        if (isEdit && props.initData) {
+            form.reset({
+                type: props.initData.type,
+                name: props.initData.name,
+            })
+        }
+    }, [isEdit, props.initData])
+
     const [open, setOpen] = React.useState(false)
 
-    const handleCreateProject = async (values: CreateApplicationPayload) => {
-        const { ok } = await props.onCreateProject(values)
-        if (ok) {
-            form.reset()
-            setOpen(false)
-        } else {
-            // applyServerErrors(form, errors)
+    const handleCreate = async (values: CreateApplicationPayload) => {
+        if (props.onCreate) {
+            const { ok } = await props.onCreate(values)
+            if (ok) {
+                form.reset()
+                setOpen(false)
+            } else {
+                // applyServerErrors(form, errors)
+            }
         }
     }
+
+    const handleUpdate = async (values: UpdateApplicationPayload) => {
+        if (props.mode === 'edit' && props.onUpdate && props.initData) {
+            const { ok } = await props.onUpdate({ ...values, id: props.initData.id })
+            if (ok) {
+                form.reset()
+                setOpen(false)
+            }
+        }
+    }
+
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button>
-                    <PlusCircle />
-                    Create Application
-                </Button>
+                {isEdit ? (
+                    <Button variant="outline" size="icon" className="hover:bg-muted hover:text-primary transition-colors">
+                        <Edit size={18} />
+                    </Button>
+                ) : (
+                    <Button>
+                        <PlusCircle />
+                        Create Application
+                    </Button>
+                )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Create a Monitoring Application</DialogTitle>
+                    <DialogTitle>{isEdit ? 'Update Application' : 'Create a Monitoring Application'}</DialogTitle>
                     <DialogDescription>
                         Please select an application type and input the application name to create a new monitoring application
                     </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-                    <form className="grid items-start gap-4" onSubmit={form.handleSubmit(handleCreateProject)}>
+                    <form
+                        className="grid items-start gap-4"
+                        onSubmit={isEdit ? form.handleSubmit(handleUpdate) : form.handleSubmit(handleCreate)}
+                    >
                         <FormField
                             control={form.control}
                             name="type"
@@ -68,7 +106,7 @@ export function CreateApplicationModal(props: CreateProjectModalProps) {
                                 <FormItem>
                                     <FormLabel>Application Type</FormLabel>
                                     <FormControl>
-                                        <Select {...field} value={field.value ?? ''} onValueChange={field.onChange}>
+                                        <Select {...field} value={field.value ?? ''} onValueChange={field.onChange} disabled={isEdit}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a application type" />
                                             </SelectTrigger>
@@ -112,7 +150,7 @@ export function CreateApplicationModal(props: CreateProjectModalProps) {
                             </DialogClose>
                             <Button type="submit" disabled={form.formState.isSubmitting}>
                                 {form.formState.isSubmitting && <Spinner />}
-                                Save changes
+                                {isEdit ? 'Save' : 'Create'}
                             </Button>
                         </DialogFooter>
                     </form>
