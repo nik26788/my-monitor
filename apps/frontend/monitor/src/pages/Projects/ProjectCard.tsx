@@ -16,9 +16,10 @@ import { appLogoMap } from './meta'
 interface ProjectCardProps {
     application: ApplicationData
     onEdit: (app: ApplicationData) => void
+    onDelete: (app: ApplicationData) => void
     index: number
 }
-function ProjectCard({ application, onEdit, index }: ProjectCardProps) {
+function ProjectCard({ application, onEdit, onDelete, index }: ProjectCardProps) {
     const { toast } = useToast()
     const copyAppId = (appId: string) => {
         copyText(appId)
@@ -26,12 +27,6 @@ function ProjectCard({ application, onEdit, index }: ProjectCardProps) {
             variant: 'success',
             title: 'Copied App ID',
         })
-    }
-
-    const handleDelete = async (/*values: UpdateApplicationPayload*/) => {
-        return {
-            ok: true,
-        }
     }
 
     return (
@@ -56,21 +51,11 @@ function ProjectCard({ application, onEdit, index }: ProjectCardProps) {
                             <DropdownMenuItem onClick={() => onEdit(application)}>
                                 <Pencil /> Edit
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(application)}>
+                            <DropdownMenuItem className="text-red-600" onClick={() => onDelete(application)}>
                                 <Trash /> Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    {/*
-                    <UpdateApplicationModal
-                        mode="edit"
-                        onUpdate={handleUpdate}
-                        initData={{ name: application.name, type: application.type, id: application.id }}
-                    />
-                    <Button variant="outline" size="icon" className="hover:bg-muted hover:text-primary transition-colors">
-                        <Edit size={18} />
-                    </Button>
-                    */}
                 </div>
             </CardHeader>
             <CardContent className="p-0 bg-muted">

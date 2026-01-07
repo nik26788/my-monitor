@@ -3,8 +3,9 @@ import { type AxiosError, HttpStatusCode } from 'axios'
 import React from 'react'
 
 import { Spinner } from '@/components/ui/spinner'
+import { useConfirm } from '@/hooks/use-confirm'
 import { useToast } from '@/hooks/user-toast'
-import { createApplication, fetchApplicationList, updateApplication } from '@/services/application'
+import { createApplication, deleteApplication, fetchApplicationList, updateApplication } from '@/services/application'
 import type { ApplicationData, ApplicationPayload } from '@/types/application'
 
 import { ApplicationModal } from './ApplicationModal'
@@ -37,6 +38,34 @@ export function Projects() {
         },
     })
 
+    const confirm = useConfirm()
+
+    const handleDelete = async (app: ApplicationData) => {
+        const ok = await confirm({
+            title: `Delete Application ${app.name}?`,
+            description: 'This action cannot be undone.',
+            destructive: true,
+        })
+
+        if (!ok) return
+
+        try {
+            await deleteApplication(app.appId)
+            toast({
+                variant: 'success',
+                title: 'Deleted',
+            })
+
+            await refetch()
+        } catch (error) {
+            const err = error as AxiosError
+            toast({
+                variant: 'destructive',
+                title: err.message || 'Delete Failed',
+            })
+        }
+    }
+
     const handleEdit = (app: ApplicationData) => {
         setEditingApp(app)
         setEditOpen(true)
@@ -44,7 +73,7 @@ export function Projects() {
 
     const handleUpdate = async (payload: ApplicationPayload) => {
         if (!editingApp) {
-            return
+            return { ok: false }
         }
 
         try {
@@ -53,7 +82,7 @@ export function Projects() {
             const err = error as AxiosError
             toast({
                 variant: 'destructive',
-                title: err.message || 'Creation Failed',
+                title: err.message || 'Update Failed',
             })
             return {
                 ok: false,
@@ -111,7 +140,7 @@ export function Projects() {
     const applicationsContent = (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {applications?.map((app, index) => {
-                return <ProjectCard key={app.id} application={app} onEdit={handleEdit} index={index} />
+                return <ProjectCard key={app.id} application={app} onEdit={handleEdit} onDelete={handleDelete} index={index} />
             })}
             <ApplicationModal
                 mode="edit"

@@ -16,3 +16,7 @@ export const createApplication = (payload: ApplicationPayload) => {
 export const updateApplication = (appId: string, payload: ApplicationPayload) => {
     return httpClient.put(`/application/${appId}`, payload)
 }
+
+export const deleteApplication = (appId: string) => {
+    return httpClient.delete(`/application/${appId}`)
+}

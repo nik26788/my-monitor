@@ -45,13 +45,25 @@ export function ApplicationModal(props: ApplicationModalProps) {
     })
 
     useEffect(() => {
+        if (!open) {
+            form.reset()
+            return
+        }
+
+        if (open && props.mode === 'create') {
+            form.reset({
+                type: null,
+                name: '',
+            })
+        }
+
         if (props.mode === 'edit' && props.application) {
             form.reset({
                 type: props.application.type,
                 name: props.application.name,
             })
         }
-    }, [props.mode, props.application])
+    }, [open, props.mode, props.application])
 
     const handleCreate = async (values: ApplicationPayload) => {
         if (props.onCreate) {
