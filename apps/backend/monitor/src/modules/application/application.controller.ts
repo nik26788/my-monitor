@@ -44,12 +44,12 @@ export class ApplicationController {
         return this.applicationService.findOne(params.id)
     }
 
-    @Put(':id')
+    @Put(':appId')
     update(@Param(new ZodValidationPipe(updateApplicationSchema)) params: UpdateApplicationDto, @Body() body: CreateApplicationDto) {
-        Logger.log('Update application by id ' + params.id, 'ApplicationController')
+        Logger.log('Update application by appId ' + params.appId, 'ApplicationController')
         Logger.log('Update application body' + JSON.stringify(body), 'ApplicationController')
 
-        return this.applicationService.update(params.id, body)
+        return this.applicationService.update(params.appId, body)
     }
 
     @Delete(':appId')

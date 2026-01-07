@@ -4,7 +4,7 @@ import z from 'zod'
  * Update application
  */
 export const updateApplicationSchema = z.object({
-    id: z.coerce.number(),
+    appId: z.string(),
 })
 
 export type UpdateApplicationDto = z.infer<typeof updateApplicationSchema>

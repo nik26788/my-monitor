@@ -2,6 +2,7 @@ import { ConflictException, Injectable, Logger, NotFoundException } from '@nestj
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
+import { CreateApplicationDto } from './dto/create-application.dto'
 import { Application } from './entities/application.entity'
 
 @Injectable()
@@ -56,12 +57,9 @@ export class ApplicationService {
         })
     }
 
-    async update(id: number, payload) {
+    async update(appId: string, payload: CreateApplicationDto) {
         const updateAt = new Date().toISOString()
-        const result = await this.applicationRepository.update(id, {
-            updateAt,
-            ...payload,
-        })
+        const result = await this.applicationRepository.update({ appId }, { updateAt, ...payload })
 
         if (result.affected === 0) {
             throw new NotFoundException('application not found')
