@@ -1,4 +1,4 @@
-import type { ApplicationData, CreateApplicationPayload } from '@/types/application'
+import type { ApplicationData, ApplicationPayload } from '@/types/application'
 import { httpClient } from '@/utils/http-client'
 
 export const fetchApplicationList = () => {
@@ -9,6 +9,10 @@ export const removeApplication = (appId: string) => {
     return httpClient.delete<boolean>('/application/' + appId)
 }
 
-export const createApplication = (payload: CreateApplicationPayload) => {
+export const createApplication = (payload: ApplicationPayload) => {
     return httpClient.post('/application', payload)
+}
+
+export const updateApplication = (appId: string, payload: ApplicationPayload) => {
+    return httpClient.put(`/application/${appId}`, payload)
 }

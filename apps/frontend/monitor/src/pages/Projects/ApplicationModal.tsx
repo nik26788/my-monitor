@@ -1,4 +1,4 @@
-import { Edit, PlusCircle } from 'lucide-react'
+import { PlusCircle } from 'lucide-react'
 import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -17,40 +17,43 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Spinner } from '@/components/ui/spinner'
-import type { CreateApplicationPayload, UpdateApplicationPayload } from '@/types/application'
+import type { ApplicationData, ApplicationPayload } from '@/types/application'
 import type { FormMode } from '@/types/common'
 
 import { appsOptions } from './meta'
 
 interface ApplicationModalProps {
-    mode: FormMode
-    initData?: CreateApplicationPayload | UpdateApplicationPayload
-    onCreate?: (values: CreateApplicationPayload) => Promise<{ ok: boolean; errors?: Record<string, string> }>
-    onUpdate?: (values: UpdateApplicationPayload) => Promise<{ ok: boolean; errors?: Record<string, string> }>
+    mode?: FormMode
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
+    application?: ApplicationData | null
+    onCreate?: (values: ApplicationPayload) => Promise<{ ok: boolean; errors?: Record<string, string> }>
+    onUpdate?: (values: ApplicationPayload) => Promise<{ ok: boolean; errors?: Record<string, string> }>
 }
 
 export function ApplicationModal(props: ApplicationModalProps) {
-    const isEdit = props.mode === 'edit'
+    const [innerOpen, setInnerOpen] = React.useState(false)
 
-    const form = useForm<CreateApplicationPayload | UpdateApplicationPayload>({
+    const open = props.open || innerOpen
+    const setOpen = props.onOpenChange || setInnerOpen
+
+    const form = useForm<ApplicationPayload>({
         defaultValues: {
-            type: props.initData?.type ?? null,
-            name: props.initData?.name ?? '',
+            type: props.application?.type ?? null,
+            name: props.application?.name ?? '',
         },
     })
 
     useEffect(() => {
-        if (isEdit && props.initData) {
+        if (props.mode === 'edit' && props.application) {
             form.reset({
-                type: props.initData.type,
-                name: props.initData.name,
+                type: props.application.type,
+                name: props.application.name,
             })
         }
-    }, [isEdit, props.initData])
+    }, [props.mode, props.application])
 
-    const [open, setOpen] = React.useState(false)
-
-    const handleCreate = async (values: CreateApplicationPayload) => {
+    const handleCreate = async (values: ApplicationPayload) => {
         if (props.onCreate) {
             const { ok } = await props.onCreate(values)
             if (ok) {
@@ -62,9 +65,9 @@ export function ApplicationModal(props: ApplicationModalProps) {
         }
     }
 
-    const handleUpdate = async (values: UpdateApplicationPayload) => {
-        if (props.mode === 'edit' && props.onUpdate && props.initData) {
-            const { ok } = await props.onUpdate({ ...values, id: props.initData.id })
+    const handleUpdate = async (payload: ApplicationPayload) => {
+        if (props.onUpdate && props.application) {
+            const { ok } = await props.onUpdate(payload)
             if (ok) {
                 form.reset()
                 setOpen(false)
@@ -75,20 +78,18 @@ export function ApplicationModal(props: ApplicationModalProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                {isEdit ? (
-                    <Button variant="outline" size="icon" className="hover:bg-muted hover:text-primary transition-colors">
-                        <Edit size={18} />
-                    </Button>
-                ) : (
+                {props.mode === 'create' ? (
                     <Button>
                         <PlusCircle />
                         Create Application
                     </Button>
+                ) : (
+                    ''
                 )}
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>{isEdit ? 'Update Application' : 'Create a Monitoring Application'}</DialogTitle>
+                    <DialogTitle>{props.mode === 'edit' ? 'Update Application' : 'Create a Monitoring Application'}</DialogTitle>
                     <DialogDescription>
                         Please select an application type and input the application name to create a new monitoring application
                     </DialogDescription>
@@ -96,17 +97,24 @@ export function ApplicationModal(props: ApplicationModalProps) {
                 <Form {...form}>
                     <form
                         className="grid items-start gap-4"
-                        onSubmit={isEdit ? form.handleSubmit(handleUpdate) : form.handleSubmit(handleCreate)}
+                        onSubmit={props.mode === 'edit' ? form.handleSubmit(handleUpdate) : form.handleSubmit(handleCreate)}
                     >
                         <FormField
                             control={form.control}
                             name="type"
-                            rules={{ required: 'Please input application type' }}
+                            rules={{
+                                required: 'Please input application type',
+                            }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Application Type</FormLabel>
                                     <FormControl>
-                                        <Select {...field} value={field.value ?? ''} onValueChange={field.onChange} disabled={isEdit}>
+                                        <Select
+                                            {...field}
+                                            value={field.value ?? ''}
+                                            onValueChange={field.onChange}
+                                            disabled={props.mode === 'edit'}
+                                        >
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select a application type" />
                                             </SelectTrigger>
@@ -131,7 +139,9 @@ export function ApplicationModal(props: ApplicationModalProps) {
                         <FormField
                             control={form.control}
                             name="name"
-                            rules={{ required: 'Please input application name' }}
+                            rules={{
+                                required: 'Please input application name',
+                            }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Application Name</FormLabel>
@@ -150,7 +160,7 @@ export function ApplicationModal(props: ApplicationModalProps) {
                             </DialogClose>
                             <Button type="submit" disabled={form.formState.isSubmitting}>
                                 {form.formState.isSubmitting && <Spinner />}
-                                {isEdit ? 'Save' : 'Create'}
+                                {props.mode === 'edit' ? 'Save' : 'Create'}
                             </Button>
                         </DialogFooter>
                     </form>

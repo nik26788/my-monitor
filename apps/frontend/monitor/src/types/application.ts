@@ -14,11 +14,8 @@ export interface ApplicationData {
     createAt: Date
 }
 
-export interface CreateApplicationPayload {
+export interface ApplicationPayload {
+    id?: number
     type: ApplicationType | null
     name: string
-}
-
-export interface UpdateApplicationPayload extends CreateApplicationPayload {
-    id: number
 }

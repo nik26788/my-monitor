@@ -15,9 +15,10 @@ import { appLogoMap } from './meta'
 
 interface ProjectCardProps {
     application: ApplicationData
+    onEdit: (app: ApplicationData) => void
     index: number
 }
-function ProjectCard({ application, index }: ProjectCardProps) {
+function ProjectCard({ application, onEdit, index }: ProjectCardProps) {
     const { toast } = useToast()
     const copyAppId = (appId: string) => {
         copyText(appId)
@@ -25,12 +26,6 @@ function ProjectCard({ application, index }: ProjectCardProps) {
             variant: 'success',
             title: 'Copied App ID',
         })
-    }
-
-    const handleUpdate = async (/*values: UpdateApplicationPayload*/) => {
-        return {
-            ok: true,
-        }
     }
 
     const handleDelete = async (/*values: UpdateApplicationPayload*/) => {
@@ -58,7 +53,7 @@ function ProjectCard({ application, index }: ProjectCardProps) {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleUpdate(application)}>
+                            <DropdownMenuItem onClick={() => onEdit(application)}>
                                 <Pencil /> Edit
                             </DropdownMenuItem>
                             <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(application)}>

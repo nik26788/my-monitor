@@ -1,17 +1,19 @@
 import { useQuery } from '@tanstack/react-query'
 import { type AxiosError, HttpStatusCode } from 'axios'
+import React from 'react'
 
 import { Spinner } from '@/components/ui/spinner'
 import { useToast } from '@/hooks/user-toast'
-import { createApplication, fetchApplicationList } from '@/services/application'
-import type { CreateApplicationPayload } from '@/types/application'
+import { createApplication, fetchApplicationList, updateApplication } from '@/services/application'
+import type { ApplicationData, ApplicationPayload } from '@/types/application'
 
 import { ApplicationModal } from './ApplicationModal'
 import ProjectCard from './ProjectCard'
 
 export function Projects() {
     const { toast } = useToast()
-    // const [isLoading, setIsLoading] = React.useState(false)
+    const [editOpen, setEditOpen] = React.useState(false)
+    const [editingApp, setEditingApp] = React.useState<ApplicationData | null>(null)
 
     const {
         data: applications,
@@ -35,7 +37,42 @@ export function Projects() {
         },
     })
 
-    const handleCreate = async (values: CreateApplicationPayload) => {
+    const handleEdit = (app: ApplicationData) => {
+        setEditingApp(app)
+        setEditOpen(true)
+    }
+
+    const handleUpdate = async (payload: ApplicationPayload) => {
+        if (!editingApp) {
+            return
+        }
+
+        try {
+            await updateApplication(editingApp.appId, payload)
+        } catch (error) {
+            const err = error as AxiosError
+            toast({
+                variant: 'destructive',
+                title: err.message || 'Creation Failed',
+            })
+            return {
+                ok: false,
+            }
+        }
+
+        toast({
+            variant: 'success',
+            title: 'Updated',
+        })
+
+        await refetch()
+
+        return {
+            ok: true,
+        }
+    }
+
+    const handleCreate = async (values: ApplicationPayload) => {
         try {
             await createApplication(values)
         } catch (error) {
@@ -48,7 +85,7 @@ export function Projects() {
             } else {
                 toast({
                     variant: 'destructive',
-                    title: 'Creation Failed',
+                    title: err.message || 'Creation Failed',
                 })
             }
             return { ok: false }
@@ -71,9 +108,25 @@ export function Projects() {
         </div>
     )
 
-    const applicationsContent = applications?.map((item, index) => {
-        return <ProjectCard key={item.id} application={item} index={index} />
-    })
+    const applicationsContent = (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {applications?.map((app, index) => {
+                return <ProjectCard key={app.id} application={app} onEdit={handleEdit} index={index} />
+            })}
+            <ApplicationModal
+                mode="edit"
+                open={editOpen}
+                onOpenChange={open => {
+                    setEditOpen(open)
+                    if (!open) {
+                        setEditingApp(null)
+                    }
+                }}
+                application={editingApp}
+                onUpdate={handleUpdate}
+            />
+        </div>
+    )
 
     const content = applicationsLoading ? (
         <div className="flex justify-center items-center h-full">
@@ -81,7 +134,7 @@ export function Projects() {
             <span className="ml-4 text-muted-foreground">Loading</span>
         </div>
     ) : applications?.length ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">{applicationsContent}</div>
+        <div>{applicationsContent}</div>
     ) : (
         emptyContent
     )
