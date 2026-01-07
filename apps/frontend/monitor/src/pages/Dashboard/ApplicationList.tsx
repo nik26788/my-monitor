@@ -4,7 +4,7 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { Spinner } from '@/components/ui/spinner'
 import { createApplication, fetchApplicationList, removeApplication } from '@/services/application'
-import type { ApplicationData, CreateApplicationPayload } from '@/types/application'
+import type { ApplicationData, ApplicationPayload } from '@/types/application'
 
 function ApplicationList() {
     const [isLoading, setIsLoading] = React.useState(false)
@@ -25,7 +25,7 @@ function ApplicationList() {
         try {
             setIsLoading(true)
 
-            const params: CreateApplicationPayload = { name: 'react' + Math.random(), type: 'react' }
+            const params: ApplicationPayload = { name: 'react' + Math.random(), type: 'react' }
             await createApplication(params)
             await refetch()
             // eslint-disable-next-line
