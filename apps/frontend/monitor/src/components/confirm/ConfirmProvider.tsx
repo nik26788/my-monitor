@@ -11,11 +11,13 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
     const [open, setOpen] = React.useState(false)
     const [options, setOptions] = React.useState<ConfirmOptions>({})
     const [loading, setLoading] = React.useState(false)
+    const [error, setError] = React.useState<string | null>(null)
 
     const resolver = React.useRef<((value: boolean) => void) | null>(null)
 
     const confirm: (opts?: ConfirmOptions) => Promise<boolean> = (opts = {}) => {
         setOptions(opts)
+        setError(null)
         setOpen(true)
 
         return new Promise<boolean>(resolve => {
@@ -26,6 +28,7 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
     const cleanup = () => {
         setOpen(false)
         setLoading(false)
+        setError(null)
         setOptions({})
         resolver.current = null
     }
@@ -37,8 +40,18 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
 
     const handleConfirm = async () => {
         setLoading(true)
-        resolver.current?.(true)
-        cleanup()
+
+        try {
+            if (options.beforeConfirm) {
+                await options.beforeConfirm()
+            }
+            resolver.current?.(true)
+            cleanup()
+        } catch (err) {
+            // ⭐ 阻止关闭，展示错误
+            setError(err instanceof Error ? err.message : 'Something went wrong')
+            setLoading(false)
+        }
     }
 
     return (
@@ -52,7 +65,8 @@ export function ConfirmProvider({ children }: { children: React.ReactNode }) {
                         {options.description && <DialogDescription>{options.description}</DialogDescription>}
                     </DialogHeader>
 
-                    <DialogFooter>
+                    <DialogFooter className="flex flex-col gap-2">
+                        {error && <p className="text-sm text-red-600 text-left">{error}</p>}
                         <Button variant="outline" onClick={handleCancel}>
                             {options.cancelText ?? 'Cancel'}
                         </Button>

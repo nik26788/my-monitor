@@ -45,25 +45,17 @@ export function Projects() {
             title: `Delete Application ${app.name}?`,
             description: 'This action cannot be undone.',
             destructive: true,
+            beforeConfirm: async () => {
+                await deleteApplication(app.appId)
+                toast({
+                    variant: 'success',
+                    title: 'Deleted',
+                })
+                await refetch()
+            },
         })
 
         if (!ok) return
-
-        try {
-            await deleteApplication(app.appId)
-            toast({
-                variant: 'success',
-                title: 'Deleted',
-            })
-
-            await refetch()
-        } catch (error) {
-            const err = error as AxiosError
-            toast({
-                variant: 'destructive',
-                title: err.message || 'Delete Failed',
-            })
-        }
     }
 
     const handleEdit = (app: ApplicationData) => {

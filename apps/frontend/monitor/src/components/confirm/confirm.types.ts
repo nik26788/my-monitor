@@ -5,4 +5,9 @@ export interface ConfirmOptions {
     confirmText?: string
     cancelText?: string
     destructive?: boolean
+    /**
+     * Optional async hook before confirm resolves
+     * Throw error to prevent confirm
+     */
+    beforeConfirm?: () => Promise<void>
 }
