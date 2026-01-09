@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger'
 import z from 'zod'
 
 /**
@@ -8,3 +9,8 @@ export const updateApplicationSchema = z.object({
 })
 
 export type UpdateApplicationDto = z.infer<typeof updateApplicationSchema>
+
+export class UpdateApplicationDtoClass {
+    @ApiProperty({ description: '应用 ID', example: 'react123456' })
+    appId: string
+}
