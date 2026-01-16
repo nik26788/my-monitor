@@ -60,6 +60,7 @@ export default tseslint.config(
         ignores: [
             'dist',
             'build',
+            '**/.*',
             '**/*.js',
             '**/*.mjs',
             '**/*.d.ts',

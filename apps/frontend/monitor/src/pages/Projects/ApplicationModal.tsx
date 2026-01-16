@@ -63,7 +63,7 @@ export function ApplicationModal(props: ApplicationModalProps) {
                 name: props.application.name,
             })
         }
-    }, [open, props.mode, props.application])
+    }, [open, props.mode, props.application, form])
 
     const handleCreate = async (values: ApplicationPayload) => {
         if (props.onCreate) {

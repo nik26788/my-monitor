@@ -76,6 +76,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useIsMobile } from '@/hooks/use-mobile'
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const schema = z.object({
     id: z.number(),
     header: z.string(),
@@ -296,6 +297,7 @@ export function DataTable({ data: initialData }: { data: z.infer<typeof schema>[
 
     const dataIds = React.useMemo<UniqueIdentifier[]>(() => data?.map(({ id }) => id) || [], [data])
 
+    // eslint-disable-next-line react-hooks/incompatible-library
     const table = useReactTable({
         data,
         columns,
