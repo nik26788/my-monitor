@@ -18,6 +18,7 @@
         "build": "turbo build",
         "build:watch": "turbo build:watch",
         "dev": "turbo dev",
+        "dev:client:monitor": "pnpm --filter @my-monitor/monitor dev",
         "dev:server:dsn": "pnpm --filter @my-monitor/dsn start:dev",
         "dev:server:monitor": "pnpm --filter @my-monitor/server start:dev",
         "docker:start": "docker compose -p my-moitor -f .devcontainer/docker-compose.yml up -d",
